@@ -17,7 +17,7 @@ class MainMenu : AppCompatActivity() {
 
         }
         bPlay.setOnClickListener {
-            
+
         }
     }
 }
