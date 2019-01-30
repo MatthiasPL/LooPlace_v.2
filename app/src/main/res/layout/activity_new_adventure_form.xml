@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:ems="10"
-                android:id="@+id/editText" android:layout_weight="1"/>
+                android:id="@+id/tName" android:layout_weight="1"/>
     </LinearLayout>
     <LinearLayout
             android:orientation="horizontal"
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:ems="10"
-                android:id="@+id/editText2" android:layout_weight="1"
+                android:id="@+id/tDesc" android:layout_weight="1"
                 android:inputType="textMultiLine|textLongMessage" android:gravity="top|center_vertical"/>
     </LinearLayout>
     <LinearLayout
@@ -46,6 +46,6 @@
         <Button
                 android:text="Dodaj"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/bAdd"/>
+                android:layout_height="match_parent" android:id="@+id/bAddNewAdventure"/>
     </LinearLayout>
 </LinearLayout>
