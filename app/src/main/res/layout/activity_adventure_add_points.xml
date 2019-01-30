@@ -16,9 +16,9 @@
               tools:context=".adventure_add_points"
               android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_weight="0.5"/>
     <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:layout_weight="1">
+            android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/viewForm"
+            android:orientation="vertical">
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -54,10 +54,19 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:layout_weight="1.6">
-            <Button
-                    android:text="Dodaj"
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/bAdd"/>
+                    android:layout_height="match_parent" android:layout_weight="1">
+                <Button
+                        android:text="Dodaj"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/bAdd" android:layout_weight="1"/>
+                <Button
+                        android:text="X"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/bCancel" android:layout_weight="1"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
