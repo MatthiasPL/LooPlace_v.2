@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -18,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_adventure_add_points.*
 
 class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
@@ -75,7 +78,7 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         bAdd.setOnClickListener {
-            if(tempmarker!=null){
+            if(tempmarker!=null && tName.text.toString()!="" && tDesc.text.toString()!="" && number.text.toString()!=""){
                 //jeżeli jest tymczasowy marker (czyli po kliknięciu na mapę)
                 pointLat = tempmarker!!.position.latitude
                 pointLong = tempmarker!!.position.longitude
@@ -86,8 +89,8 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 //usunięcie tego markera
 
                 val mark = mMap.addMarker(MarkerOptions().title(tName.text.toString()).snippet(tDesc.text.toString()).position(LatLng(pointLat, pointLong)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
-                mark.tag = "alll"
-                //dodanie nowego, już stałego
+                mark.tag = number.text.toString().toInt().toString()
+                //dodanie nowego, już stałego markera
                 pointSelected = false
                 viewForm.visibility = View.INVISIBLE
                 clearFormView()
@@ -106,6 +109,26 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 //usunięcie zaznaczonego znacznika
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        //stworzenie menu
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.nav, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(mMarkerArray.size>0){
+            //wysłanie do firebase'a
+            if(mMarkerArray.size>0){
+                val database = FirebaseDatabase.getInstance().reference
+                val newAdventure = database.child("adventure").push()
+                val adventure = Adventure(name, desc, mMarkerArray)
+                newAdventure.setValue(adventure)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

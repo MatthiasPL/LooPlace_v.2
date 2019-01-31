@@ -44,7 +44,16 @@ class MainMenu : AppCompatActivity() {
             }
         }
         bPlay.setOnClickListener {
-
+            if(GPSStatus()){
+                //jeżeli jest wysoka dokładność GPS
+                //val intent = Intent(this@MainMenu, MainPlayMap::class.java)
+                startActivity(intent)
+            }
+            else{
+                Toast.makeText(this@MainMenu, "Włącz wysoką dokładność GPS", Toast.LENGTH_LONG).show()
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS) //otwiera ustawienia związane z lokalizacją
+                startActivity(intent)
+            }
         }
     }
 
@@ -104,4 +113,5 @@ class MainMenu : AppCompatActivity() {
         val GpsStatus: Boolean = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         return GpsStatus
     }
+    
 }

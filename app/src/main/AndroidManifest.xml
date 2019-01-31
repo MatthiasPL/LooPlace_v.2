@@ -39,7 +39,7 @@
 
         <activity
                 android:name=".adventure_add_points"
-                android:label="@string/title_activity_adventure_add_points">
+                android:label="New adventure">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.loopmoth.looplace.MainMenu"/>
