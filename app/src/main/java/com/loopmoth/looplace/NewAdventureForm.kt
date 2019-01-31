@@ -40,6 +40,10 @@ class NewAdventureForm : AppCompatActivity() {
                     intent.putExtra("desc", desc)
                     //przesyłanie danych do następnej aktywności
 
+                    tName.text.clear()
+                    tDesc.text.clear()
+                    //wyczyszczenie formularza
+
                     startActivity(intent)
                     //otwiera nową aktywność - mapę z możliwością dodawania punktów
                 }

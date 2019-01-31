@@ -34,6 +34,12 @@
                     android:inputType="textShortMessage"
                     android:ems="10"
                     android:id="@+id/tName" android:layout_weight="1"/>
+            <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:id="@+id/number" android:layout_weight="1000"/>
         </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
