@@ -13,6 +13,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+
         <activity android:name=".MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,6 +24,11 @@
         <activity
             android:name=".NewAdventureForm"
             android:parentActivityName=".MainMenu"
+        >
+        </activity>
+        <activity
+                android:name=".MainPlayMap"
+                android:parentActivityName=".MainMenu"
         >
         </activity>
     </application>
