@@ -47,6 +47,7 @@ class MainMenu : AppCompatActivity() {
             if(GPSStatus()){
                 //jeżeli jest wysoka dokładność GPS
                 val intent = Intent(this@MainMenu, MainPlayMap::class.java)
+
                 startActivity(intent)
             }
             else{
@@ -113,4 +114,5 @@ class MainMenu : AppCompatActivity() {
         val GpsStatus: Boolean = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         return GpsStatus
     }
+    
 }
