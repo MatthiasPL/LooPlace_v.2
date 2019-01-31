@@ -1,6 +1,7 @@
 package com.loopmoth.looplace
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -126,6 +127,11 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 val newAdventure = database.child("adventure").push()
                 val adventure = Adventure(name, desc, mMarkerArray)
                 newAdventure.setValue(adventure)
+
+                val intent = Intent(this@adventure_add_points, MainMenu::class.java)
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                Toast.makeText(this@adventure_add_points, "Dodano przygodę do bazy danych", Toast.LENGTH_LONG).show()
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)
