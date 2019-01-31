@@ -17,12 +17,6 @@ class MainPlayMap : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val map = MapFragment()
-        val manager = supportFragmentManager
-        val transaction = manager.beginTransaction()
-        transaction.add(R.id.mapfragmentbox, map)
-        transaction.commit()
-
         bShowAdventures.setOnClickListener {
             //val listmusic = mutableListOf<String>()
             val advlist = mutableListOf("adv1","adv2")
