@@ -45,6 +45,11 @@
                     android:value="com.loopmoth.looplace.MainMenu"/>
         </activity>
 
+        <activity
+                android:name=".MainPlayMap"
+                android:parentActivityName=".MainMenu"
+        >
+        </activity>
 
     </application>
 

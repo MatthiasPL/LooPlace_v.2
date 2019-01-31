@@ -46,7 +46,8 @@ class MainMenu : AppCompatActivity() {
         bPlay.setOnClickListener {
             if(GPSStatus()){
                 //jeżeli jest wysoka dokładność GPS
-                //val intent = Intent(this@MainMenu, MainPlayMap::class.java)
+                val intent = Intent(this@MainMenu, MainPlayMap::class.java)
+
                 startActivity(intent)
             }
             else{
