@@ -113,4 +113,5 @@ class MainMenu : AppCompatActivity() {
         val GpsStatus: Boolean = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         return GpsStatus
     }
+    
 }
