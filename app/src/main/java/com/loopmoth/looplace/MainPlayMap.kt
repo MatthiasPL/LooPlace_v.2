@@ -19,20 +19,20 @@ class MainPlayMap : AppCompatActivity() {
         super.onResume()
         bShowAdventures.setOnClickListener {
             //val listmusic = mutableListOf<String>()
-            val advlist = mutableListOf("adv1","adv2")
+            val advlist = mutableListOf("adv1","adv2","a","d","v","e","n","t","u","r","e")
 
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, advlist)
             AdvList.adapter = adapter
 
             bStart.visibility=Button.GONE
 
-            if(AdvList.visibility==ListView.GONE) {
+            if(AdvList.visibility==ListView.INVISIBLE) {
                 bShowAdventures.text="Ukryj dostępne mapy"
                 AdvList.visibility = ListView.VISIBLE
             }
             else if(AdvList.visibility==ListView.VISIBLE) {
                 bShowAdventures.text="Pokaż dostępne mapy"
-                AdvList.visibility = ListView.GONE
+                AdvList.visibility = ListView.INVISIBLE
             }
 
 
