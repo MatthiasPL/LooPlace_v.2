@@ -20,6 +20,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
@@ -39,4 +42,6 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'org.jetbrains.kotlin.android.extensions'
+
 
