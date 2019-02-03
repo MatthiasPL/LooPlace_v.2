@@ -98,9 +98,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap!!.setMinZoomPreference(17f)
-        mMap!!.setMaxZoomPreference(17f)
-        mMap!!.getUiSettings().setScrollGesturesEnabled(false)
+        mMap!!.setMinZoomPreference(15f)
+        mMap!!.setMaxZoomPreference(19f)
+        //mMap!!.getUiSettings().setScrollGesturesEnabled(false)
 
         getLocation()
 
@@ -153,9 +153,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             user = LatLng(location.latitude, location.longitude)
             if(mapFragment!=null){
-                //Toast.makeText(this@MapsActivity, location.longitude.toString() + " " + location.latitude.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MapsActivity, location.longitude.toString() + " " + location.latitude.toString(), Toast.LENGTH_SHORT).show()
                 mMap!!.clear()
-                mMap!!.addMarker(MarkerOptions().position(user!!).title("User").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+                mMap!!.addMarker(MarkerOptions().position(user!!).title("Tu jesteś").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
 
                 val cameraPosition = CameraPosition.Builder()
                     .target(user)
