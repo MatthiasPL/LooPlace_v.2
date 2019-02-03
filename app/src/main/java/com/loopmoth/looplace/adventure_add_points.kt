@@ -35,6 +35,9 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
     private val mMarkerArray = ArrayList<Marker>()
     //tablica markerów na mapie
 
+    private val mCMarkerArray = ArrayList<CMarker>()
+    //tablica własnych markerów, inaczej wyrzuca błąd przy wczytywaniu listy
+
     private var long: Double? = 0.0
     private var lat: Double? = 0.0
     //współrzędne użytkownika
@@ -123,9 +126,14 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
         if(mMarkerArray.size>0){
             //wysłanie do firebase'a
             if(mMarkerArray.size>0){
-                val database = FirebaseDatabase.getInstance().reference
-                val newAdventure = database.child("adventure").push()
-                val adventure = Adventure(name, desc, mMarkerArray)
+                database = FirebaseDatabase.getInstance().reference
+                val newAdventure = database.child("adventures").push()
+
+                for (marker in mMarkerArray) {
+                    mCMarkerArray.add(CMarker(marker.id, marker.title, marker.snippet, marker.tag, marker.position.latitude, marker.position.longitude))
+                }
+
+                val adventure = Adventure(name, desc, mCMarkerArray)
                 newAdventure.setValue(adventure)
 
                 val intent = Intent(this@adventure_add_points, MainMenu::class.java)

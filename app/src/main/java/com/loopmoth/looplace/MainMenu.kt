@@ -56,6 +56,20 @@ class MainMenu : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+        bEdit.setOnClickListener {
+            val intent = Intent(this@MainMenu, AdventureList::class.java)
+
+            intent.putExtra("mode", "edit")
+
+            startActivity(intent)
+        }
+        bDelete.setOnClickListener {
+            val intent = Intent(this@MainMenu, AdventureList::class.java)
+
+            intent.putExtra("mode", "removal")
+
+            startActivity(intent)
+        }
     }
 
     fun readUserID(){
