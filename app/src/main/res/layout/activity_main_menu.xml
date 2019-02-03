@@ -15,4 +15,12 @@
             android:text="Stwórz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/bAdd"/>
+    <Button
+            android:text="Edytuj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/bEdit"/>
+    <Button
+            android:text="Usuń"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/bDelete"/>
 </LinearLayout>
