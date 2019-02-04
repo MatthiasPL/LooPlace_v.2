@@ -103,8 +103,11 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 tempmarker!!.remove()
                 //usunięcie tego markera
 
+                val character = 5
+                val singlecharacter = character.toChar()
+
                 val mark = mMap.addMarker(MarkerOptions().title(tName.text.toString()).snippet(tDesc.text.toString()).position(LatLng(pointLat, pointLong)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
-                mark.tag = number.text.toString().toInt().toString()
+                mark.tag = number.text.toString().toInt().toString() + singlecharacter + tQuestion.text.toString() + singlecharacter + tAnswer.text.toString()
                 //dodanie nowego, już stałego markera
                 pointSelected = false
                 viewForm.visibility = View.INVISIBLE
@@ -177,6 +180,8 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 mark.tag = it.tag
                 //dodanie nowego, już stałego markera
 
+                //getNumber(it.tag.toString())
+
                 mMarkerArray.add(mark)
             }
         }
@@ -208,7 +213,7 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 viewForm.visibility = View.VISIBLE
                 //pokaż okno z informacjami dotyczącymi punktu oraz okno z możliwością edycji punktu
 
-                setFormViewText(it.title.toString(), it.snippet.toString(), it.tag.toString().toInt().toString())
+                setFormViewText(it.title.toString(), it.snippet.toString(), getNumber(it.tag.toString()).toInt().toString(), getQuestion(it.tag.toString()), getAnswer(it.tag.toString()))// it.tag.toString().toInt().toString())
                 //ustawienie tekstu
 
                 tempmarker = it
@@ -239,10 +244,12 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
         number.text.clear()
     }
 
-    private fun setFormViewText(name: String, desc: String, nb: String){
+    private fun setFormViewText(name: String, desc: String, nb: String, question: String, answer: String){
         tName.setText(name)
         tDesc.setText(desc)
         number.setText(nb)
+        tQuestion.setText(question)
+        tAnswer.setText(answer)
     }
 
     private fun initAdventure() {
@@ -274,5 +281,26 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         database.child("adventures").addListenerForSingleValueEvent(markerListener)
+    }
+
+    private fun getNumber(tag: String): String{
+        val character = 5
+        val singlecharacter = character.toChar()
+        val result = tag.split(singlecharacter)
+        return result[0]
+    }
+
+    private fun getQuestion(tag: String): String{
+        val character = 5
+        val singlecharacter = character.toChar()
+        val result = tag.split(singlecharacter)
+        return result[1]
+    }
+
+    private fun getAnswer(tag: String): String{
+        val character = 5
+        val singlecharacter = character.toChar()
+        val result = tag.split(singlecharacter)
+        return result[2]
     }
 }
