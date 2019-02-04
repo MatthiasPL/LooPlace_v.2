@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -23,7 +22,6 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_adventure_add_points.*
-import kotlinx.android.synthetic.main.activity_adventure_list.*
 
 class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
 
@@ -61,6 +59,11 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
     //dane z formularza wyżej
 
     private var infoWindowShown: Boolean = false
+    //czy okno z informacjami o markerze jest pokazane?
+
+    private val character = 5
+    private val singlecharacter = character.toChar()
+    //separator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +96,7 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         bAdd.setOnClickListener {
-            if(tempmarker!=null && tName.text.toString()!="" && tDesc.text.toString()!="" && number.text.toString()!=""){
+            if(tempmarker!=null && tName.text.toString()!="" && tDesc.text.toString()!="" && number.text.toString()!="" && tQuestion.text.toString()!="" && tAnswer.text.toString()!=""){
                 //jeżeli jest tymczasowy marker (czyli po kliknięciu na mapę)
                 pointLat = tempmarker!!.position.latitude
                 pointLong = tempmarker!!.position.longitude
@@ -102,9 +105,6 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 mMarkerArray.remove(tempmarker!!)
                 tempmarker!!.remove()
                 //usunięcie tego markera
-
-                val character = 5
-                val singlecharacter = character.toChar()
 
                 val mark = mMap.addMarker(MarkerOptions().title(tName.text.toString()).snippet(tDesc.text.toString()).position(LatLng(pointLat, pointLong)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
                 mark.tag = number.text.toString().toInt().toString() + singlecharacter + tQuestion.text.toString() + singlecharacter + tAnswer.text.toString()
@@ -115,6 +115,9 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
 
                 mMarkerArray.add(mark)
                 //dodanie markera do tablicy
+            }
+            else{
+                Toast.makeText(this@adventure_add_points, "Uzupełnij pola tekstowe", Toast.LENGTH_LONG).show()
             }
         }
         bCancel.setOnClickListener {
@@ -142,22 +145,27 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
             if(mMarkerArray.size>0){
                 if(intent.getStringExtra("adventureKey")!=null){
                     database.child("adventures").child(key!!).setValue(null)
+                    //wyzerowanie gałęzi skutkuje usunięciem jej z bazy
                 }
 
                 val newAdventure = database.child("adventures").push()
                 val key = newAdventure.key
+                //pobranie klucza generowanego przez FireBase
 
                 for (marker in mMarkerArray) {
                     mCMarkerArray.add(CMarker(marker.id, marker.title, marker.snippet, marker.tag, marker.position.latitude, marker.position.longitude))
+                    //potrzeba było stworzyć włany obiekt markerów, inaczej pokazywały się błędy
                 }
 
                 val adventure = Adventure(name, desc, mCMarkerArray, key)
                 newAdventure.setValue(adventure)
+                //dodanie do bazy
 
                 val intent = Intent(this@adventure_add_points, MainMenu::class.java)
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                 Toast.makeText(this@adventure_add_points, "Dodano przygodę do bazy danych", Toast.LENGTH_LONG).show()
                 startActivity(intent)
+                //powrót do menu głównego
             }
             else{
                 Toast.makeText(this@adventure_add_points, "Zaznacz conajmniej jeden punkt na mapie", Toast.LENGTH_LONG).show()
@@ -172,20 +180,6 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
         obtainLocation()
         //pobranie lokalizacji, przeniesienie tam widoku i prybliżenie
 
-        if(adventureTemp!=null){
-            //Toast.makeText(this@adventure_add_points, "a", Toast.LENGTH_SHORT).show()
-            adventureTemp!!.markers!!.forEach {
-                //Toast.makeText(this@adventure_add_points, "a", Toast.LENGTH_SHORT).show()
-                val mark = mMap.addMarker(MarkerOptions().title(it.title).snippet(it.snippet).position(LatLng(it.latitude!!, it.longitude!!)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
-                mark.tag = it.tag
-                //dodanie nowego, już stałego markera
-
-                //getNumber(it.tag.toString())
-
-                mMarkerArray.add(mark)
-            }
-        }
-
         mMap.setOnMapClickListener {
             //po kliknięciu na mapę -> akcja, it-> obiekt LatLng przetrzymujący współrzędne, ma właściowści latitude i longitude
             if(!pointSelected && !infoWindowShown){
@@ -199,10 +193,6 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 infoWindowShown = false
                 clearFormView()
                 //po odznaczeniu wskaźnika schowaj okno z edycją wskaźnika
-
-                //mMarkerArray.forEach{
-                //    Toast.makeText(this@adventure_add_points, it.tag.toString(), Toast.LENGTH_SHORT).show()
-                //}
             }
         }
 
@@ -239,12 +229,16 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun clearFormView(){
+        //wyczyszczenie pól
         tName.text.clear()
         tDesc.text.clear()
         number.text.clear()
+        tQuestion.text.clear()
+        tAnswer.text.clear()
     }
 
     private fun setFormViewText(name: String, desc: String, nb: String, question: String, answer: String){
+        //ustawienie wartości pól
         tName.setText(name)
         tDesc.setText(desc)
         number.setText(nb)
@@ -253,24 +247,24 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initAdventure() {
+        //wczytanie markerów z bazy na mapę i dodanie tych markerów do tablicy
         val markerListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 adventureArray.clear()
                 dataSnapshot.children.mapNotNullTo(adventureArray) { it.getValue<Adventure>(Adventure::class.java) }
+                //mapowanie z bazy do tablicy
 
                 adventureArray.forEach{
                     if(it.key==key){
+                        //jeżeli klucz przygody jest ten, którego poszukujemy, to stwórz przygodę z danych zawartych w bazie
                         adventureTemp = Adventure(it.name, it.description, it.markers!!, it.key)
-
-                        //Toast.makeText(this@adventure_add_points, "działa", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 adventureTemp!!.markers!!.forEach{
-                    //Toast.makeText(this@adventure_add_points, "a", Toast.LENGTH_SHORT).show()
                     val mark = mMap.addMarker(MarkerOptions().title(it.title).snippet(it.snippet).position(LatLng(it.latitude!!, it.longitude!!)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
                     mark.tag = it.tag
-                    //dodanie nowego, już stałego markera
+                    //dodanie markerów na mapę
 
                     mMarkerArray.add(mark)
                 }
@@ -278,28 +272,26 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
+                //jeżeli nie uda się połączyć z bazą
             }
         }
         database.child("adventures").addListenerForSingleValueEvent(markerListener)
     }
 
     private fun getNumber(tag: String): String{
-        val character = 5
-        val singlecharacter = character.toChar()
+        //wyciągnięcie liczby z tagu
         val result = tag.split(singlecharacter)
         return result[0]
     }
 
     private fun getQuestion(tag: String): String{
-        val character = 5
-        val singlecharacter = character.toChar()
+        //wyciągnięcie pytania z tagu
         val result = tag.split(singlecharacter)
         return result[1]
     }
 
     private fun getAnswer(tag: String): String{
-        val character = 5
-        val singlecharacter = character.toChar()
+        //wyciągnięcie odpowiedzi z tagu
         val result = tag.split(singlecharacter)
         return result[2]
     }
