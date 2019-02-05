@@ -15,6 +15,9 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ListView
 import android.widget.Toast
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -23,6 +26,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import java.util.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Marker
+import kotlinx.android.synthetic.main.activity_maps.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -75,6 +83,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //mRotation?.also { rotation ->
         //    mSensorManager.registerListener(this, rotation, SensorManager.SENSOR_DELAY_GAME)
         //}
+        bShowAdv.setOnClickListener {
+
+            bStart.visibility= Button.GONE
+            val m1 = mMap!!.addMarker(
+                MarkerOptions()
+                    .position(LatLng(50.3875, 18.6308))
+                    .anchor(0.5f, 0.5f)
+                    .title("Title1")
+                    .snippet("Snippet1")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))
+
+            bShowAdv.visibility= Button.GONE
+
+        }
     }
 
     override fun onPause() {
@@ -115,7 +137,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun getLocation(){
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
         try {
-            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 3f, locationListener)
         } catch(ex: SecurityException) {
             Log.d("myTag", "Security Exception, no location available");
         }
@@ -156,7 +178,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(this@MapsActivity, location.longitude.toString() + " " + location.latitude.toString(), Toast.LENGTH_SHORT).show()
                 mMap!!.clear()
                 mMap!!.addMarker(MarkerOptions().position(user!!).title("Tu jesteś").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
-
+                if(bShowAdv.visibility==Button.GONE) {
+                    val m1 = mMap!!.addMarker(
+                        MarkerOptions()
+                            .position(LatLng(50.3875, 18.6308))
+                            .anchor(0.5f, 0.5f)
+                            .title("Title1")
+                            .snippet("Snippet1")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
+                    )
+                }
                 val cameraPosition = CameraPosition.Builder()
                     .target(user)
                     .build()
