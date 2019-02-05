@@ -11,9 +11,10 @@ class Adventure {
     var key: String? = null
 
     constructor()
-    constructor(name: String?, description: String?, markers: List<Marker>){
+    constructor(name: String?, description: String?, markers: List<Marker>,key: String?){
         this.name = name
         this.description = description
         this.markers = markers
+        this.key = key
     }
 }

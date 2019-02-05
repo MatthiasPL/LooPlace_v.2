@@ -42,7 +42,12 @@
 
         <activity
                 android:name=".MapsActivity"
-                android:label="@string/title_activity_maps">
+                android:parentActivityName=".MainMenu">
+            android:label="@string/title_activity_maps">
+        </activity>
+        <activity android:name=".AdventurePoint">
+        </activity>
+        <activity android:name=".HappyEnding">
         </activity>
     </application>
 

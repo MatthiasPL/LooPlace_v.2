@@ -2,6 +2,7 @@ package com.loopmoth.looplace
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.GeomagneticField
 import android.hardware.Sensor
@@ -10,15 +11,13 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -39,8 +38,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //odwołanie do bazy danych
 
     private var AdventureListener: ValueEventListener? = null
+    private var MarkerListener: ValueEventListener? = null
     private val adventureArray: MutableList<Adventure> = mutableListOf()
+    private val mArray: MutableList<CMarker> = mutableListOf()
     private val mMarkerArray = ArrayList<Marker>()
+    private val markersArray: MutableList<Marker> = mutableListOf()
+    private var yourmarker: Marker? = null
+    private var advlat:Double?=null
+    private var advlong:Double?=null
+    private var advname:String?=null
+    private var advsnippet:String?=null
+    private var navigationflag=false
 
     private val PERMISSIONS_REQUEST = 100
     private var mMap: GoogleMap? = null
@@ -56,7 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-
+        database = FirebaseDatabase.getInstance().reference
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         mRotation = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
 
@@ -86,7 +94,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment!!.getMapAsync(this)
 
 
-        database = FirebaseDatabase.getInstance().reference
+
     }
 
     override fun onResume() {
@@ -97,7 +105,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         bShowAdv.setOnClickListener {
 
             bStart.visibility = Button.GONE
-            val m1 = mMap!!.addMarker(
+            mMap!!.addMarker(
                 MarkerOptions()
                     .position(LatLng(50.3875, 18.6308))
                     .anchor(0.5f, 0.5f)
@@ -107,9 +115,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             )
 
             bShowAdv.visibility = Button.GONE
+            //GetPoints()
+            //initAdventure()
 
         }
 
+        bStart.setOnClickListener {
+            //po kliknięciu startu włącza się aplikacja map, która nawiguje nas do pierwszego punktu przygody
+            //podosimy flagę, że użytkownik wybrał trasę i nawiguje się do punktu
+            navigationflag=true;
+            val gmmIntentUri = Uri.parse("google.navigation:q="+ advlat+","+advlong);
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            startActivity(mapIntent)
+        }
+    }
+
+    private fun GetFullAdventure(){
+        if(navigationflag)
+        {
+            
+        }
+    }
+
+    /*private fun GetPoints() {
         val AdventureListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 adventureArray.clear()
@@ -119,11 +148,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val key = newAdventure.key
                 Toast.makeText(this@MapsActivity, key, Toast.LENGTH_SHORT).show()*/
 
+                val advArray: MutableList<String> = mutableListOf()
 
-                adventureArray.forEach {
-                    Toast.makeText(this@MapsActivity, it.key, Toast.LENGTH_SHORT).show()
-                    //adventureTemp = Adventure(it.name, it.description, it.markers!!, it.key)
+                adventureArray.forEach{
+                    advArray.add(it.name + "\n" + it.description + "\nLiczba punktów: " + it.markers!!.size.toString())
                 }
+                Toast.makeText(this@MapsActivity, advArray.toString(), Toast.LENGTH_SHORT).show()
+                /*adventureArray.forEach {
+                    GetMarkers()
+                    //Toast.makeText(this@MapsActivity, it.key, Toast.LENGTH_SHORT).show()
+                    //adventureTemp = Adventure(it.name, it.description, it.markers!!, it.key)
+                }*/
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -132,6 +167,117 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         database.child("adventures").addListenerForSingleValueEvent(AdventureListener)
+    }
+
+    private fun GetMarkers() {
+        val MarkerListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                mArray.clear()
+                dataSnapshot.children.mapNotNullTo(mArray) { it.getValue<CMarker>(CMarker::class.java) }
+                //mapowanie z bazy do tablicy
+                /*val newAdventure = database.child("adventures").push()
+                val key = newAdventure.key
+                Toast.makeText(this@MapsActivity, key, Toast.LENGTH_SHORT).show()*/
+                val mark=mArray[0]
+                mMap!!.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(mark.latitude!!, mark.longitude!!))
+                        .anchor(0.5f, 0.5f)
+                        .title(mark.title)
+                        .snippet(mark.snippet)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
+                )
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+                //jeżeli nie uda się połączyć z bazą
+            }
+        }
+        database.child("adventures").addListenerForSingleValueEvent(MarkerListener)
+    }*/
+
+    /*private fun initAdventures() {
+        val menuListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                adventureArray.clear()
+                dataSnapshot.children.mapNotNullTo(adventureArray) { it.getValue<Adventure>(Adventure::class.java) }
+
+                val advArray: MutableList<String> = mutableListOf()
+
+                adventureArray.forEach{
+                    advArray.add(it.name + "\n" + it.description + "\nLiczba punktów: " + it.markers!!.size.toString())
+                }
+
+                val adapter = ArrayAdapter(this@MapsActivity, android.R.layout.simple_list_item_1, advArray)
+                adventurelist.adapter = adapter
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        database.child("adventures").addListenerForSingleValueEvent(menuListener)
+    }*/
+    private var adventureTemp: Adventure? = null
+    private fun initAdventure() {
+        //wczytanie markerów z bazy na mapę i dodanie tych markerów do tablicy
+        val markerListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.exists())
+                    Toast.makeText(this@MapsActivity, "hi", Toast.LENGTH_SHORT).show()
+                adventureArray.clear()
+                dataSnapshot.children.mapNotNullTo(adventureArray) { it.getValue<Adventure>(Adventure::class.java) }
+                //mapowanie z bazy do tablicy
+                    Toast.makeText(this@MapsActivity, adventureArray.toString(), Toast.LENGTH_SHORT).show()
+                adventureArray.forEach{
+                    if(it.key=="-LXyY8X6ft6HS7IqVyhg"){
+                        //jeżeli klucz przygody jest ten, którego poszukujemy, to stwórz przygodę z danych zawartych w bazie
+                        adventureTemp = Adventure(it.name, it.description, it.markers!!, it.key)
+                    }
+                }
+
+                /*adventureTemp!!.markers!!.forEach{
+                    val mark = mMap!!.addMarker(MarkerOptions().title(it.title).snippet(it.snippet).position(LatLng(50.8,18.0)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                    mark.tag = it.tag
+                    //dodanie markerów na mapę
+
+                    mMarkerArray.add(mark)
+                }*/
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+                //jeżeli nie uda się połączyć z bazą
+            }
+        }
+        database.child("adventures").addListenerForSingleValueEvent(markerListener)
+    }
+
+    private val markerClickListener = object : GoogleMap.OnMarkerClickListener {
+        override fun onMarkerClick(marker: Marker?): Boolean {
+            if (marker != yourmarker) {
+                //jeśli znacznik nie jest znacznikiem pozycji użytkownika ma zrobić to co poniżej
+                //pobranie wartości latitude i logitude pierwszego punktu trasy
+                advlat=marker!!.position.latitude
+                advlong=marker.position.longitude
+                advname=marker.title        //tytuł przygody
+                advsnippet = marker.snippet     //opis przygody
+                //informacje o trasie dla użytkownika
+                bStart.text="Rozpocznij przygodę " + advname
+                bStart.visibility=Button.VISIBLE
+                tvDesc.text="Opis przygody: " + advsnippet
+                tvDesc.visibility=TextView.VISIBLE
+                //Toast.makeText(this@MapsActivity, marker!!.position.latitude.toString(), Toast.LENGTH_SHORT).show()
+                return true
+            }
+
+            // po kliknięciu w znacznik położenia użytkownika
+
+            bStart.visibility=Button.INVISIBLE
+            tvDesc.visibility=TextView.INVISIBLE
+            return false
+        }
     }
 
 
@@ -146,6 +292,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Remove post value event listener
         AdventureListener?.let {
+            database.removeEventListener(it)
+        }
+        MarkerListener?.let {
             database.removeEventListener(it)
         }
     }
@@ -171,6 +320,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //mMap!!.getUiSettings().setScrollGesturesEnabled(false)
 
         getLocation()
+
+        //po załadowaniu mapy nasłuchujemy czy znacznik został kliknięty
+        with(mMap!!) {
+            setOnMarkerClickListener(markerClickListener)
+        }
+
 
         /*val calendar = Calendar.getInstance()
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
@@ -223,10 +378,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if(mapFragment!=null){
                 Toast.makeText(this@MapsActivity, location.longitude.toString() + " " + location.latitude.toString(), Toast.LENGTH_SHORT).show()
                 mMap!!.clear()
-                mMap!!.addMarker(MarkerOptions().position(user!!).title("Tu jesteś").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+                yourmarker = mMap!!.addMarker(MarkerOptions().position(user!!).title("Tu jesteś").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
                 if(bShowAdv.visibility==Button.GONE) {
                     // jeśli zmieni się położenie użytkownika a mają być pokazane trasy, to ma je pokazać
-                    val m1 = mMap!!.addMarker(
+                    mMap!!.addMarker(
                         MarkerOptions()
                             .position(LatLng(50.3875, 18.6308))
                             .anchor(0.5f, 0.5f)
