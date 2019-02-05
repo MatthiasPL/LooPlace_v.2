@@ -20,6 +20,7 @@ import java.io.OutputStreamWriter
 class MainMenu : AppCompatActivity() {
 
     private lateinit var database: DatabaseReference
+    //odwołanie do bazy danych
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

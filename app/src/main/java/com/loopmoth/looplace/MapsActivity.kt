@@ -30,9 +30,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_maps.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+    private lateinit var database: DatabaseReference
+    //odwołanie do bazy danych
+
+    private var AdventureListener: ValueEventListener? = null
+    private val adventureArray: MutableList<Adventure> = mutableListOf()
+    private val mMarkerArray = ArrayList<Marker>()
 
     private val PERMISSIONS_REQUEST = 100
     private var mMap: GoogleMap? = null
@@ -76,6 +84,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment!!.getMapAsync(this)
+
+
+        database = FirebaseDatabase.getInstance().reference
     }
 
     override fun onResume() {
@@ -85,23 +96,58 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //}
         bShowAdv.setOnClickListener {
 
-            bStart.visibility= Button.GONE
+            bStart.visibility = Button.GONE
             val m1 = mMap!!.addMarker(
                 MarkerOptions()
                     .position(LatLng(50.3875, 18.6308))
                     .anchor(0.5f, 0.5f)
                     .title("Title1")
                     .snippet("Snippet1")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
+            )
 
-            bShowAdv.visibility= Button.GONE
+            bShowAdv.visibility = Button.GONE
 
         }
+
+        val AdventureListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                adventureArray.clear()
+                dataSnapshot.children.mapNotNullTo(adventureArray) { it.getValue<Adventure>(Adventure::class.java) }
+                //mapowanie z bazy do tablicy
+                /*val newAdventure = database.child("adventures").push()
+                val key = newAdventure.key
+                Toast.makeText(this@MapsActivity, key, Toast.LENGTH_SHORT).show()*/
+
+
+                adventureArray.forEach {
+                    Toast.makeText(this@MapsActivity, it.key, Toast.LENGTH_SHORT).show()
+                    //adventureTemp = Adventure(it.name, it.description, it.markers!!, it.key)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+                //jeżeli nie uda się połączyć z bazą
+            }
+        }
+        database.child("adventures").addListenerForSingleValueEvent(AdventureListener)
     }
+
+
 
     override fun onPause() {
         super.onPause()
         //mSensorManager.unregisterListener(this)
+    }
+
+    public override fun onStop() {
+        super.onStop()
+
+        // Remove post value event listener
+        AdventureListener?.let {
+            database.removeEventListener(it)
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -179,6 +225,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap!!.clear()
                 mMap!!.addMarker(MarkerOptions().position(user!!).title("Tu jesteś").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
                 if(bShowAdv.visibility==Button.GONE) {
+                    // jeśli zmieni się położenie użytkownika a mają być pokazane trasy, to ma je pokazać
                     val m1 = mMap!!.addMarker(
                         MarkerOptions()
                             .position(LatLng(50.3875, 18.6308))
@@ -195,6 +242,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 locationSet=true
             }
         }
+
+        fun ShowAdventures()
+        {
+
+
+        }
+
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
         override fun onProviderDisabled(provider: String) {}
