@@ -45,7 +45,8 @@
                 android:parentActivityName=".MainMenu">
             android:label="@string/title_activity_maps">
         </activity>
-        <activity android:name=".AdventurePoint">
+        <activity android:name=".AdventurePoint"
+                  android:configChanges="orientation|screenSize">
         </activity>
         <activity android:name=".HappyEnding">
         </activity>

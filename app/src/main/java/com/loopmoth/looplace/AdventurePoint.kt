@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_adventure_point.*
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class AdventurePoint : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     //odwołanie do bazy danych
@@ -31,16 +32,16 @@ class AdventurePoint : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adventure_point)
 
-        database = FirebaseDatabase.getInstance().reference
 
-        advkey = intent.getStringExtra("advkey")
+
+
         //pointnum=intent.getIntExtra("pointnum",-1)
-        Toast.makeText(this@AdventurePoint, pointnum.toString(), Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
         super.onResume()
-        tvQuestion.text = advkey
+        database = FirebaseDatabase.getInstance().reference
+        advkey = intent.getStringExtra("advkey")
         GetFullAdventure()
         tvPowitanie.text = "Witaj w punkcie" + getNumber(mark!!.tag.toString()) + ": " + mark!!.title
         tvSnippet.text = mark!!.snippet
@@ -50,7 +51,7 @@ class AdventurePoint : AppCompatActivity() {
         Toast.makeText(this@AdventurePoint, advkey, Toast.LENGTH_SHORT).show()
 
         bAnswer.setOnClickListener {
-            if (etAnswer.text.toString() == correctAnswer) {
+            if (etAnswer.text.toString() == correctAnswer) {//ZAD3 zamiast correctAnswer - > "a"
                 pointnum++
                 if (pointnum <= numberofpoints!!) {
                     //jeśli to nie koniec przygody
@@ -122,6 +123,17 @@ class AdventurePoint : AppCompatActivity() {
         //wyciągnięcie odpowiedzi z tagu
         val result = tag.split(singlecharacter)
         return result[2]
+    }
+
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle?){
+        savedInstanceState!!.putString("advkey",advkey);
+        super.onSaveInstanceState(savedInstanceState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        advkey=savedInstanceState!!.getString("advkey")
     }
 }
 

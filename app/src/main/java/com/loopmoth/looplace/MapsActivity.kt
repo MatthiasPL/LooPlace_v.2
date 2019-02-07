@@ -129,11 +129,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if(navigationflag==true&&advlat!!<(userlat!!+3)&&advlat!!>(userlat!!-3)&&advlong!!<(userlong!!+3)&&advlong!!>(userlong!!-3))
             //jeśli użytkownik użyl nawigacji i jest w kwadracie 3m na 3m od polozenia punktu - przechodzi do pytania
         {
-            val intent = Intent(this@MapsActivity, AdventurePoint::class.java)
+            val intent = Intent(this@MapsActivity, AdventurePoint::class.java)//ZAD1zmiana intentu na HappyEnding
             GetAdvKey(advname!!,advsnippet!!)
             intent.putExtra("advkey", advkey.toString())
-            //informujemy nastepna aktywnosc ktory to punkt
-            //intent.putExtra("pointnum",pointnum)
             Toast.makeText(this@MapsActivity, "ooo "+advkey.toString(), Toast.LENGTH_SHORT).show()
             startActivity(intent)
         }
@@ -200,6 +198,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     adventureTemp = Adventure(it.name, it.description, it.markers!!, it.key)
 
                     val mark=adventureTemp!!.markers!![0]
+                    //punkty na mapie
                         mMap!!.addMarker(MarkerOptions().title(it.name).snippet(it.description).position(LatLng(mark.latitude!!,mark.longitude!!)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))
                         //mark.tag = it.tag
                         //dodanie markerów na mapę
@@ -310,7 +309,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val markerClickListener = object : GoogleMap.OnMarkerClickListener {
         override fun onMarkerClick(marker: Marker?): Boolean {
-            if (marker != yourmarker) {
+            if (marker != yourmarker) {//ZAD2if do wywalenia (cały if)
                 //jeśli znacznik nie jest znacznikiem pozycji użytkownika ma zrobić to co poniżej
                 //pobranie wartości latitude i logitude pierwszego punktu trasy
                 advlat=marker!!.position.latitude
@@ -435,6 +434,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if(mapFragment!=null){
                 Toast.makeText(this@MapsActivity, location.longitude.toString() + " " + location.latitude.toString(), Toast.LENGTH_SHORT).show()
                 mMap!!.clear()
+                //ZAD4 usunąc yourmarker
                 yourmarker = mMap!!.addMarker(MarkerOptions().position(user!!).title("Tu jesteś").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
                 if(bShowAdv.visibility==Button.GONE) {
                     // jeśli zmieni się położenie użytkownika a mają być pokazane trasy, to ma je pokazać
