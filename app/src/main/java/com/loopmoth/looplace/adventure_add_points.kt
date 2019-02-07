@@ -184,7 +184,7 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
             //po kliknięciu na mapę -> akcja, it-> obiekt LatLng przetrzymujący współrzędne, ma właściowści latitude i longitude
             if(!pointSelected && !infoWindowShown){
                 //jeżeli jest już fioletowy marker i nie jest pokazane okienko z informacjami dotyczącego wskaźnika -> nie rób nic, inaczej -> pokaż formularz i dodaj marker
-                tempmarker = mMap.addMarker(MarkerOptions().position(it).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))
+                tempmarker = mMap.addMarker(MarkerOptions().position(it).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))) //ZAD tutaj sobie zmieniasz na jaki kolor chcesz
                 viewForm.visibility = View.VISIBLE
                 pointSelected = true
             }
@@ -225,6 +225,9 @@ class adventure_add_points : AppCompatActivity(), OnMapReadyCallback {
                 val currentLocation = LatLng(lat!!, long!!)
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f))
                 //newLatLng - też poprawna funkcja, ale bez możliwości przybliżania od strony programistycznej
+
+                //val mark = mMap.addMarker(MarkerOptions().position(LatLng(lat!!, long!!)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                //ZAD marker, będzie błąd bo nulle w stringach 
             }
     }
 

@@ -29,7 +29,7 @@ class NewAdventureForm : AppCompatActivity() {
 
             if (permission == PackageManager.PERMISSION_GRANTED) {
                 //sprawdzenie czy jest nadane uprawnienie dostępu do lokalizacji
-                if(tDesc.text.toString()!="" && tName.text.toString()!=""){
+                if(tDesc.text.toString()!="" && tName.text.toString()!=""){ //ZAD tutaj usuwasz kiedy chcesz mieć puste, daj domyślnie jakieś spacje czy coś
                     //jeżeli te pola nie są puste -> nowa aktywność
                     val intent = Intent(this@NewAdventureForm, adventure_add_points::class.java)
 
