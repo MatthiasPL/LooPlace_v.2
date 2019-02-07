@@ -30,16 +30,17 @@
             android:id="@+id/tvQuestion" android:fontFamily="casual" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/etAnswer"/>
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"/>
     <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp">
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            android:id="@+id/linearLayout2">
         <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:text="Name"
@@ -49,5 +50,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="8dp"
                 app:layout_constraintStart_toStartOf="parent" android:hint="Odp:"/>
+        <Button
+                android:text="Prześlij odpowiedź"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/bAnswer"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
