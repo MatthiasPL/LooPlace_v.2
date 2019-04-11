@@ -20,6 +20,7 @@ import java.io.OutputStreamWriter
 class MainMenu : AppCompatActivity() {
 
     private lateinit var database: DatabaseReference
+    //odwołanie do bazy danych
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +47,7 @@ class MainMenu : AppCompatActivity() {
         bPlay.setOnClickListener {
             if(GPSStatus()){
                 //jeżeli jest wysoka dokładność GPS
-                val intent = Intent(this@MainMenu, MainPlayMap::class.java)
-
+                val intent = Intent(this@MainMenu, MapsActivity::class.java)
                 startActivity(intent)
             }
             else{

@@ -1,5 +1,7 @@
 package com.loopmoth.looplace
 
+import com.google.android.gms.maps.model.Marker
+
 class Adventure {
     var name: String? = null
     var description: String? =null
@@ -9,6 +11,7 @@ class Adventure {
     var key: String? = null
 
     constructor()
+
     constructor(name: String?, description: String?, markers: List<CMarker>, key: String?){
         this.name = name
         this.description = description
