@@ -1,4 +1,3 @@
-
 package com.loopmoth.looplace
 
 class CMarker {

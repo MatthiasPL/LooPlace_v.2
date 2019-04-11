@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.loopmoth.looplace">
+          xmlns:tools="http://schemas.android.com/tools" package="com.loopmoth.looplace">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -12,7 +12,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -22,10 +22,6 @@
         </activity>
         <activity
                 android:name=".NewAdventureForm"
-                android:parentActivityName=".MainMenu">
-        </activity>
-        <activity
-                android:name=".MainPlayMap"
                 android:parentActivityName=".MainMenu">
         </activity>
         <!--
@@ -41,15 +37,34 @@
                 android:value="@string/google_maps_key"/>
 
         <activity
+                android:name=".adventure_add_points"
+                android:label="New adventure">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.loopmoth.looplace.MainMenu"/>
+        </activity>
+
+        <activity
+                android:name=".MainPlayMap"
+                android:parentActivityName=".MainMenu">
+        </activity>
+
+        <activity
                 android:name=".MapsActivity"
                 android:parentActivityName=".MainMenu">
             android:label="@string/title_activity_maps">
         </activity>
+      
         <activity android:name=".AdventurePoint"
                   android:configChanges="orientation|screenSize">
         </activity>
         <activity android:name=".HappyEnding">
+          
+        <activity android:name=".AdventureList"
+            android:parentActivityName=".MainMenu"
+        >
         </activity>
+
     </application>
 
 </manifest>
